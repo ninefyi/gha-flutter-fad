@@ -2,7 +2,7 @@ name: Android
 on:
   workflow_dispatch:
 jobs:
-  build_and_release:
+  build:
     name: build flutter for Android
     runs-on: macos-latest
     env:

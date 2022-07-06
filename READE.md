@@ -22,6 +22,12 @@ firebase login:ci
   keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
 ```
 
+- Convert to base64
+
+```BASH
+base64 app.keystore | pbcopy
+```
+
 - Create Secrets on GitHub Settings.
   1. ANDROID_KEYSTORE
   2. ANDROID_KEYSTORE_ALIAS

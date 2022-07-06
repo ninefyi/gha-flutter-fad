@@ -27,29 +27,25 @@ jobs:
         with:
           flutter-version: ${{env.FLUTTER_VERSION}}
       - run: flutter pub get
+        working-directory: ./flutter_app
       - run: flutter build apk
         working-directory: ./flutter_app
         env:
-          ANDROID_KEYSTORE_PATH: ${{ steps.write_file.outputs.filePath }}
-          # ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-          # ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
-          # ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}        
+          ANDROID_KEYSTORE_PATH: ${{ steps.write_file.outputs.filePath }}       
       - run: flutter build appbundle
+        working-directory: ./flutter_app
         env:
           ANDROID_KEYSTORE_PATH: ${{ steps.write_file.outputs.filePath }}
-          # ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-          # ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
-          # ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       - name: Archive apk artifacts
         uses: actions/upload-artifact@v2
         with:
           name: apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
       - name: Archive aab artifacts
         uses: actions/upload-artifact@v2
         with:
           name: aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: flutter_app/build/app/outputs/bundle/release/app-release.aab
   release:
     name: release to firebase distribution
     needs: build
@@ -57,13 +53,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
-        name: Download apk
+        name: Download aab
         with:
-          name: apk
-          path: build/app/outputs/apk
+          name: aab
+          path: /tmp/aab
       - name: Firebase App Distribution Action for Android
         uses: hasretsariyer/firebase-app-distribution-github-action@v1.0
         with:
           app_id: ${{secrets.FIREBASE_ANDROID_APP_ID}}
           firebase_token: ${{secrets.FIREBASE_TOKEN}}
-          app_file: build/app/outputs/aab/app-release.aab
+          app_file: /tmp/aab/app-release.aab

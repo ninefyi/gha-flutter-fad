@@ -2,7 +2,7 @@ name: Android
 on:
   workflow_dispatch:
 jobs:
-  build:
+  build_and_release:
     name: build flutter for Android
     runs-on: macos-latest
     env:
@@ -36,6 +36,12 @@ jobs:
         working-directory: ./flutter_app
         env:
           ANDROID_KEYSTORE_PATH: ${{ steps.write_file.outputs.filePath }}
+      - name: Upload AAB to Firebase App Distribution Action
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          file: flutter_app/build/app/outputs/bundle/release/app-release.aab
       - name: Archive apk artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -46,22 +52,22 @@ jobs:
         with:
           name: aab
           path: flutter_app/build/app/outputs/bundle/release/app-release.aab
-  release:
-    name: release to firebase distribution
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        name: Download aab
-        with:
-          name: aab
-          path: flutter_app/build/app/outputs/bundle/release/app-release.aab
-      - run: ls -R
-        working-directory: flutter_app/build/app/outputs/bundle/release/app-release.aab
-      - name: Upload AAB to Firebase App Distribution Action
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
-          file: flutter_app/build/app/outputs/bundle/release/app-release.aab
+  # release:
+  #   name: release to firebase distribution
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/download-artifact@v3
+  #       name: Download aab
+  #       with:
+  #         name: aab
+  #         path: flutter_app/build/app/outputs/bundle/release/app-release.aab
+  #     - run: ls -R
+  #       working-directory: flutter_app/build/app/outputs/bundle/release/app-release.aab
+  #     - name: Upload AAB to Firebase App Distribution Action
+  #       uses: wzieba/Firebase-Distribution-Github-Action@v1
+  #       with:
+  #         appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
+  #         token: ${{secrets.FIREBASE_TOKEN}}
+  #         file: flutter_app/build/app/outputs/bundle/release/app-release.aab

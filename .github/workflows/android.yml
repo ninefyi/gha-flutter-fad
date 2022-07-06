@@ -8,8 +8,18 @@ jobs:
     env:
       JAVA_VERSION: "11.0"
       FLUTTER_VERSION: "3.0.4"
+      WORKING_DIRECTORY: "./flutter_app"
+      ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+      ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
+      - name: Decode Keystore
+        id: write_file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: "${{ secrets.ANDROID_KEYSTORE_FILENAME }}"
+          encodedString: ${{ secrets.ANDROID_KEYSTORE }}
       - uses: actions/setup-java@v1
         with:
           java-version: ${{env.JAVA_VERSION}}
@@ -18,7 +28,18 @@ jobs:
           flutter-version: ${{env.FLUTTER_VERSION}}
       - run: flutter pub get
       - run: flutter build apk
+        working-directory: ./flutter_app
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ steps.write_file.outputs.filePath }}
+          # ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          # ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+          # ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}        
       - run: flutter build appbundle
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ steps.write_file.outputs.filePath }}
+          # ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          # ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+          # ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       - name: Archive apk artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -45,4 +66,4 @@ jobs:
         with:
           app_id: ${{secrets.FIREBASE_ANDROID_APP_ID}}
           firebase_token: ${{secrets.FIREBASE_TOKEN}}
-          app_file: build/app/outputs/apk/app-release.apk
+          app_file: build/app/outputs/aab/app-release.aab

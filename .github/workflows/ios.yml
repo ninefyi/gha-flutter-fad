@@ -1,0 +1,9 @@
+name: iOS
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: build flutter for iOS
+    runs-on: macos-latest
+    steps:
+    - run: echo "Hello"

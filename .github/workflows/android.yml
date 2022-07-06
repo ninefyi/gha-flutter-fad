@@ -1,0 +1,48 @@
+name: Android
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: build flutter for Android
+    runs-on: macos-latest
+    env:
+      JAVA_VERSION: "11.0"
+      FLUTTER_VERSION: "3.0.4"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{env.JAVA_VERSION}}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{env.FLUTTER_VERSION}}
+      - run: flutter pub get
+      - run: flutter build apk
+      - run: flutter build appbundle
+      - name: Archive apk artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Archive aab artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: aab
+          path: build/app/outputs/bundle/release/app-release.aab
+  release:
+    name: release to firebase distribution
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        name: Download apk
+        with:
+          name: apk
+          path: build/app/outputs/apk
+      - name: Firebase App Distribution Action for Android
+        uses: hasretsariyer/firebase-app-distribution-github-action@v1.0
+        with:
+          app_id: ${{secrets.FIREBASE_ANDROID_APP_ID}}
+          firebase_token: ${{secrets.FIREBASE_TOKEN}}
+          app_file: build/app/outputs/apk/app-release.apk

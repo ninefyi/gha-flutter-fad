@@ -57,9 +57,9 @@ jobs:
         with:
           name: aab
           path: /tmp/aab
-      - name: Firebase App Distribution Action for Android
-        uses: hasretsariyer/firebase-app-distribution-github-action@v1.0
+      - name: Upload AAB to Firebase App Distribution Action
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          app_id: ${{secrets.FIREBASE_ANDROID_APP_ID}}
-          firebase_token: ${{secrets.FIREBASE_TOKEN}}
-          app_file: /tmp/aab/app-release.aab
+          appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          file: /tmp/aab/app-release.aab

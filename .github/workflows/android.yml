@@ -51,17 +51,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
         name: Download aab
         with:
           name: aab
-          path: /tmp/aab
+          path: flutter_app/build/app/outputs/bundle/release/app-release.aab
       - run: ls -R
-        working-directory: /tmp/aab
+        working-directory: flutter_app/build/app/outputs/bundle/release/app-release.aab
       - name: Upload AAB to Firebase App Distribution Action
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
-          file: /tmp/aab/app-release.aab
+          file: flutter_app/build/app/outputs/bundle/release/app-release.aab

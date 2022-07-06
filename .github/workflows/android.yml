@@ -42,7 +42,7 @@ jobs:
           name: apk
           path: flutter_app/build/app/outputs/flutter-apk/app-release.apk
       - name: Archive aab artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: aab
           path: flutter_app/build/app/outputs/bundle/release/app-release.aab
@@ -52,11 +52,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         name: Download aab
         with:
           name: aab
           path: /tmp/aab
+      - run: ls -R
       - name: Upload AAB to Firebase App Distribution Action
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:

@@ -38,3 +38,5 @@ base64 app.keystore | pbcopy
   7. FIREBASE_ANDROID_APP_ID
 
 ## Prepare for iOS
+
+- [Create CSR](https://help.apple.com/developer-account/#/devbfa00fef7)

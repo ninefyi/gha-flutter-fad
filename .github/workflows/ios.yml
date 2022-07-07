@@ -67,6 +67,6 @@ jobs:
       - name: Upload IPA to Firebase App Distribution Action
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
+          appId: ${{secrets.FIREBASE_IOS_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
           file: tmp/ios/flutter_app.ipa

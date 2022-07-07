@@ -54,13 +54,13 @@ jobs:
       - uses: actions/download-artifact@v3
         name: Download aab
         with:
-          name: aab
-          path: tmp/aab
+          name: apk
+          path: tmp/apk
       - run: ls -R
-        working-directory: tmp/aab
+        working-directory: tmp/apk
       - name: Upload AAB to Firebase App Distribution Action
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
-          file: tmp/aab/app-release.aab
+          file: tmp/apk/app-release.apk

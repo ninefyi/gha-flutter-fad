@@ -42,4 +42,6 @@ base64 app.keystore | pbcopy
 
 - [Create CSR](https://help.apple.com/developer-account/#/devbfa00fef7)
 - Export.P12 file using .CSR file
-- Create Adhoc certificate
+- Create iOS Distribution certificate
+- Create Ad-hoc provisioning profile
+- [Create exportOptions.plist](https://dev.to/gualtierofr/ad-hoc-distribution-for-ios-1524)

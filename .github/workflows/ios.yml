@@ -41,17 +41,14 @@ jobs:
         with:
           flutter-version: ${{env.FLUTTER_VERSION}}
       - run: flutter pub get
-      # - run: flutter analyze
-      # - run: flutter test
-      # - run: flutter build apk
-      # - run: flutter build appbundle
-      # - run: flutter build ios --release --no-codesign
-      - run: flutter build ipa --release --export-options-plist="ios/Runner/ExportOptions.plist"
-      - name: Archive ios-app artifacts
+        working-directory: ./flutter_app
+      - run: flutter build ipa --release --export-options-plist="ios/ExportOptions.plist"
+        working-directory: ./flutter_app
+      - name: Upload ipa artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ios
-          path: build/ios/ipa/simple_app.ipa
+          path: build/ios/ipa/flutter_app.ipa
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}
         run: |
@@ -63,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
-        name: Download ios-app
+        name: Download ipa
         with:
           name: ios
           path: tmp/ios
@@ -72,4 +69,4 @@ jobs:
         with:
           appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
-          file: tmp/ios/app-release.ipa
+          file: tmp/ios/flutter_app.ipa

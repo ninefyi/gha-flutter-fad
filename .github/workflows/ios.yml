@@ -62,15 +62,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
         name: Download ios-app
         with:
           name: ios
-          path: build/app/outputs/ios
+          path: tmp/ios
       - name: Upload IPA to Firebase App Distribution Action
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_ANDROID_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
-          file: /tmp/aab/app-release.aab
+          file: tmp/ios/app-release.ipa

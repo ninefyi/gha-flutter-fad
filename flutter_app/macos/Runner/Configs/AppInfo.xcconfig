@@ -11,4 +11,4 @@ PRODUCT_NAME = flutter_app
 PRODUCT_BUNDLE_IDENTIFIER = com.fyi.flutterapp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 com.fyi.flutterappple. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 com.fyi.flutterapp. All rights reserved.
